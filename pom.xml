@@ -14,7 +14,7 @@
         <logback_version>1.2.11</logback_version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
-        <main.class>com.example.ApplicationKt</main.class>
+        <main.class>dev.webbank.ApplicationKt</main.class>
     </properties>
     <repositories>
     </repositories>
