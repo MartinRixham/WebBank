@@ -73,7 +73,7 @@ object JsonArray {
 		}
 	}
 
-	private class Invalid(private val error: String): Read {
+	class Invalid(private val error: String): Read {
 
 		override fun getBoolean(index: Int): Boolean {
 			return false
@@ -106,7 +106,7 @@ object JsonArray {
 			}
 
 			override fun next(): JsonValue {
-				throw NotImplementedError()
+				throw IndexOutOfBoundsException()
 			}
 		}
 
@@ -115,15 +115,10 @@ object JsonArray {
 		}
 	}
 
-	private class Valid(private val list: List<String>): Read {
+	class Valid(private val list: List<String>): Read {
 
 		override fun getBoolean(index: Int): Boolean {
-			if (list.getOrNull(index) == "true") {
-				return true
-			}
-			else {
-				return false
-			}
+			return list.getOrNull(index) == "true"
 		}
 
 		override fun getNumber(index: Int): Double {
@@ -147,7 +142,7 @@ object JsonArray {
 				return ""
 			}
 			else {
-				return value
+				return value.substring(1, value.length - 1)
 			}
 		}
 
@@ -198,38 +193,7 @@ object JsonArray {
 		var type: Byte = LITERAL;
 
 		for ((i, character) in string.withIndex()) {
-			if (state == START) {
-				if (character == '[') {
-					state = BEFORE_VALUE
-				}
-				else if (!character.isWhitespace()) {
-					return Invalid("Failed to parse array at character $i: Started with $character instead of [.")
-				}
-			}
-			else if (state == BEFORE_VALUE) {
-				if (!character.isWhitespace()) {
-					if (character == '{') {
-						depth = 0
-						type = OBJECT
-					}
-					else if (character == '[') {
-						depth = 0
-						type = ARRAY
-					}
-					else if (character == '"') {
-						type = STRING
-					}
-					else {
-						type = LITERAL
-					}
-					builder.clear()
-					if (type != STRING) {
-						builder.append(character)
-					}
-					state = IN_VALUE
-				}
-			}
-			else if (state == IN_VALUE) {
+			if (state == IN_VALUE) {
 				if (escape) {
 					builder.append(character)
 					escape == false
@@ -237,25 +201,11 @@ object JsonArray {
 				else if (character == '\\') {
 					escape == true
 				}
-				else if (character.isWhitespace()) {
-					builder.append(character)
-				}
-				else if (type == LITERAL) {
-					if (character == ',')  {
-						list.add(builder.toString())
-						state = AFTER_VALUE
-					}
-					else {
-						builder.append(character)
-					}
-				}
 				else if (type == STRING) {
+					builder.append(character)
 					if (character == '"') {
 						list.add(builder.toString())
 						state = AFTER_VALUE
-					}
-					else {
-						builder.append(character)
 					}
 				}
 				else if (type == OBJECT) {
@@ -289,11 +239,52 @@ object JsonArray {
 					}
 				}
 				else {
+					if (character == ',')  {
+						list.add(builder.toString())
+						state = AFTER_VALUE
+					}
+					else {
+						builder.append(character)
+					}
+				}
+			}
+			else if (state == START) {
+				if (character == '[') {
+					state = BEFORE_VALUE
+				}
+				else if (!character.isWhitespace()) {
+					return Invalid("Failed to parse array at character $i: Started with $character instead of [.")
+				}
+			}
+			else if (state == BEFORE_VALUE) {
+				if (character == ']') {
+					state = END
+				}
+				else if (!character.isWhitespace()) {
+					if (character == '{') {
+						depth = 0
+						type = OBJECT
+					}
+					else if (character == '[') {
+						depth = 0
+						type = ARRAY
+					}
+					else if (character == '"') {
+						type = STRING
+					}
+					else {
+						type = LITERAL
+					}
+					builder.clear()
 					builder.append(character)
+					state = IN_VALUE
 				}
 			}
 			else if (state == AFTER_VALUE) {
-				if (character == ',') {
+				if (character == ']') {
+					state = END
+				}
+				else if (character == ',') {
 					state == BEFORE_VALUE
 				}
 				else {
