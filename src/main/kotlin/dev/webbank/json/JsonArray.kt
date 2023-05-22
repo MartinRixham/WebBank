@@ -12,6 +12,8 @@ object JsonArray {
 
 		fun getObject(index: Int): JsonObject.Read
 
+		fun getArray(index: Int): Read
+
 		fun getValue(index: Int): JsonValue
 
 		fun length(): Int
@@ -48,6 +50,16 @@ object JsonArray {
 
 		fun pushAll(vararg values: String): Write {
 			list.addAll(values.map { value -> "\"$value\"" })
+			return this
+		}
+
+		fun push(value: JsonObject.Write): Write {
+			list.add(value.toString())
+			return this
+		}
+
+		fun pushAll(vararg values: JsonObject.Write): Write {
+			list.addAll(values.map(JsonObject.Write::toString))
 			return this
 		}
 
@@ -89,6 +101,10 @@ object JsonArray {
 
 		override fun getObject(index: Int): JsonObject.Read {
 			return JsonObject.Invalid(error)
+		}
+
+		override fun getArray(index: Int): Read {
+			return Invalid(error)
 		}
 
 		override fun getValue(index: Int): JsonValue {
@@ -151,6 +167,11 @@ object JsonArray {
 			return JsonObject.parse(value)
 		}
 
+		override fun getArray(index: Int): Read {
+			val value = list.getOrNull(index)
+			return parse(value)
+		}
+
 		override fun getValue(index: Int): JsonValue {
 			return JsonValue.parse(list.getOrNull(index))
 		}
@@ -184,7 +205,11 @@ object JsonArray {
 	private const val OBJECT: Byte = 2
 	private const val ARRAY: Byte = 3
 
-	fun parse(string: String): Read {
+	fun parse(string: String?): Read {
+		if (string == null) {
+			return Invalid("Failed to parse array: No data.")
+		}
+
 		val list = mutableListOf<String>()
 		var state: Byte = START
 		var depth = 0

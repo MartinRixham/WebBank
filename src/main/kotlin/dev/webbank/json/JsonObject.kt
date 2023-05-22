@@ -14,6 +14,8 @@ object JsonObject {
 
 		fun getObject(key: String): Read
 
+		fun getArray(key: String): JsonArray.Read
+
 		fun getValue(key: String): JsonValue
 
 		fun getKeys(): Set<String>
@@ -39,6 +41,11 @@ object JsonObject {
 		}
 
 		fun put(key: String, value: Write): Write {
+			map.set(key, value.toString())
+			return this
+		}
+
+		fun put(key: String, value: JsonArray.Write): Write {
 			map.set(key, value.toString())
 			return this
 		}
@@ -78,6 +85,10 @@ object JsonObject {
 			return Invalid(error)
 		}
 
+		override fun getArray(key: String): JsonArray.Read {
+			return JsonArray.Invalid(error)
+		}
+
 		override fun getValue(key: String): JsonValue {
 			return JsonValue.Invalid(error)
 		}
@@ -94,7 +105,7 @@ object JsonObject {
 	class Valid(private val map: Map<String, String>): Read {
 
 		override fun hasValue(key: String): Boolean {
-			return map.containsKey(key))
+			return map.containsKey(key)
 		}
 
 		override fun getBoolean(key: String): Boolean {
@@ -130,6 +141,10 @@ object JsonObject {
 			return parse(map.get(key))
 		}
 
+		override fun getArray(key: String): JsonArray.Read {
+			return JsonArray.parse(map.get(key))
+		}
+
 		override fun getValue(key: String): JsonValue {
 			return JsonValue.Valid(key)
 		}
@@ -153,7 +168,6 @@ object JsonObject {
 	private const val ARRAY: Byte = 3
 
 	fun parse(string: String?): Read {
-
 		if (string == null) {
 			return Invalid("Failed to parse object: No data.")
 		}
