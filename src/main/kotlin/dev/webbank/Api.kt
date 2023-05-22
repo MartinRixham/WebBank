@@ -24,7 +24,7 @@ fun Application.api(repository: Repository) {
 			val user = User.parse()
 			repository.saveUser(user)
 
-			call.respondText(user.toJson())
+			call.respondText(user.toJson().toString())
 		}
         staticResources("/", "static")
     }

@@ -16,8 +16,12 @@
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
         <main.class>dev.webbank.ApplicationKt</main.class>
     </properties>
-    <repositories>
-    </repositories>
+	  <repositories>
+    <repository>
+      <id>jitpack.io</id>
+      <url>https://jitpack.io</url>
+    </repository>
+  </repositories>
     <dependencies>
         <dependency>
             <groupId>io.ktor</groupId>

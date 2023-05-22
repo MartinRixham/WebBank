@@ -2,12 +2,13 @@ package dev.webbank.user
 
 import java.util.UUID
 
+import dev.webbank.json.JsonObject
 import dev.webbank.persistence.Valid
 import dev.webbank.persistence.Invalid
 
 interface User {
 
-	fun toJson(): String
+	fun toJson(): JsonObject.Write
 
 	companion object {
 
@@ -25,8 +26,8 @@ class ValidUser(private val uid: UUID, private val name: String): User, Valid {
 		return uid;
 	}
 
-	override fun toJson(): String {
-		return """{ "id": "$uid" }"""
+	override fun toJson(): JsonObject.Write {
+		return JsonObject.Write().put("id", uid.toString())
 	}
 }
 
