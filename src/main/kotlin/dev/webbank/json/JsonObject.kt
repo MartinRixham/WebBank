@@ -2,6 +2,10 @@ package dev.webbank.json
 
 object JsonObject {
 
+	operator fun invoke(): Write {
+		return Write()
+	}
+
 	sealed interface Read {
 
 		fun hasValue(key: String): Boolean
@@ -17,6 +21,8 @@ object JsonObject {
 		fun getArray(key: String): JsonArray.Read
 
 		fun getValue(key: String): JsonValue
+
+		fun validate(): String
 
 		fun getKeys(): Set<String>
 	}
@@ -48,6 +54,10 @@ object JsonObject {
 		fun put(key: String, value: JsonArray.Write): Write {
 			map.set(key, value.toString())
 			return this
+		}
+
+		fun read(): Read {
+			return Valid(map)
 		}
 
 		override fun toString(): String {
@@ -93,8 +103,20 @@ object JsonObject {
 			return JsonValue.Invalid(error)
 		}
 
+		override fun validate(): String {
+			return error
+		}
+
 		override fun getKeys(): Set<String> {
 			return emptySet()
+		}
+
+		override fun equals(other: Any?): Boolean {
+			return hashCode() == other.hashCode()
+		}
+
+		override fun hashCode(): Int {
+			return error.hashCode()
 		}
 
 		override fun toString(): String {
@@ -149,8 +171,40 @@ object JsonObject {
 			return JsonValue.Valid(key)
 		}
 
+		override fun validate(): String {
+			val errors = mutableMapOf<String, String>()
+
+			for ((key, value) in map) {
+				val error = JsonValue.parse(value).validate()
+				if (error.length > 0) {
+					errors.put(key, error)
+				}
+			}
+
+			if (errors.size == 0) {
+				return ""
+			}
+			else {
+				return "{ ${errors.map { (key, error) ->
+					""""Value of $key": "$error""""
+				}.joinToString(", ")} }"
+			}
+		}
+
 		override fun getKeys(): Set<String> {
 			return map.keys
+		}
+
+		override fun equals(other: Any?): Boolean {
+			return hashCode() == other.hashCode()
+		}
+
+		override fun hashCode(): Int {
+			var hash = 0
+			for (value in map.values) {
+				hash = hash xor JsonValue.parse(value).hashCode()
+			}
+			return hash
 		}
 	}
 
@@ -227,7 +281,10 @@ object JsonObject {
 					}
 				}
 				else {
-					if (character == ',')  {
+					if (character == '}') {
+						state = END
+					}
+					else if (character == ',')  {
 						map.set(key, builder.toString())
 						state = BEFORE_KEY
 					}
@@ -254,16 +311,16 @@ object JsonObject {
 				}
 				else if (character != ',' &&
 					!character.isWhitespace()) {
-					return Invalid("Failed to parse object at character $i: Found $character when expecting ,.")
+					return Invalid("Failed to parse object at character $i: Found $character when expecting key.")
 				}
 			}
 			else if (state == IN_KEY) {
 				if (escape) {
 					builder.append(character)
-					escape == false
+					escape = false
 				}
 				else if (character == '\\') {
-					escape == true
+					escape = true
 				}
 				else if (character == '"') {
 					key = builder.toString()

@@ -2,6 +2,10 @@ package dev.webbank.json
 
 object JsonArray {
 
+	operator fun invoke(): Write {
+		return Write()
+	}
+
 	sealed interface Read: Iterable<JsonValue> {
 
 		fun getBoolean(index: Int): Boolean
@@ -17,6 +21,8 @@ object JsonArray {
 		fun getValue(index: Int): JsonValue
 
 		fun length(): Int
+
+		fun validate(): String
 	}
 
 	class Write() {
@@ -73,6 +79,10 @@ object JsonArray {
 			return this
 		}
 
+		fun read(): Read {
+			return Valid(list)
+		}
+
 		override fun toString(): String {
 			val builder = StringBuilder()
 			builder.append('[')
@@ -115,6 +125,10 @@ object JsonArray {
 			return 0
 		}
 
+		override fun validate(): String {
+			return error
+		}
+
 		override fun iterator(): Iterator<JsonValue> = object: Iterator<JsonValue> {
 
 			override fun hasNext(): Boolean {
@@ -124,6 +138,14 @@ object JsonArray {
 			override fun next(): JsonValue {
 				throw IndexOutOfBoundsException()
 			}
+		}
+
+		override fun equals(other: Any?): Boolean {
+			return hashCode() == other.hashCode()
+		}
+
+		override fun hashCode(): Int {
+			return error.hashCode()
 		}
 
 		override fun toString(): String {
@@ -180,6 +202,26 @@ object JsonArray {
 			return list.size
 		}
 
+		override fun validate(): String {
+			val errors = mutableMapOf<Int, String>()
+
+			for ((index, value) in list.withIndex()) {
+				val error = JsonValue.parse(value).validate()
+				if (error.length > 0) {
+					errors.put(index, error)
+				}
+			}
+
+			if (errors.size == 0) {
+				return ""
+			}
+			else {
+				return "{ ${errors.map { (index, error) ->
+					""""Value at array posistion $index": "$error""""
+				}.joinToString(", ")} }"
+			}
+		}
+
 		override fun iterator(): Iterator<JsonValue> = object: Iterator<JsonValue> {
 
 			var index: Int = 0;
@@ -191,6 +233,18 @@ object JsonArray {
 			override fun next(): JsonValue {
 				return JsonValue.parse(list[index])
 			}
+		}
+
+		override fun equals(other: Any?): Boolean {
+			return hashCode() == other.hashCode()
+		}
+
+		override fun hashCode(): Int {
+			var hash = 0
+			for (value in list) {
+				hash = hash xor JsonValue.parse(value).hashCode()
+			}
+			return hash
 		}
 	}
 
@@ -221,10 +275,10 @@ object JsonArray {
 			if (state == IN_VALUE) {
 				if (escape) {
 					builder.append(character)
-					escape == false
+					escape = false
 				}
 				else if (character == '\\') {
-					escape == true
+					escape = true
 				}
 				else if (type == STRING) {
 					builder.append(character)
@@ -264,9 +318,12 @@ object JsonArray {
 					}
 				}
 				else {
+					if (character == ']') {
+						state = END
+					}
 					if (character == ',')  {
 						list.add(builder.toString())
-						state = AFTER_VALUE
+						state = BEFORE_VALUE
 					}
 					else {
 						builder.append(character)
@@ -310,7 +367,7 @@ object JsonArray {
 					state = END
 				}
 				else if (character == ',') {
-					state == BEFORE_VALUE
+					state = BEFORE_VALUE
 				}
 				else {
 					return Invalid("Failed to parse array at character $i: Found $character when expecting ,.")

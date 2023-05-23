@@ -24,6 +24,71 @@ sealed interface JsonValue {
 
 	fun getArray(): JsonArray.Read
 
+	fun validate(): String
+
+	class Invalid(private val error: String): JsonValue {
+
+		override fun isNull(): Boolean {
+			return false
+		}
+
+		override fun isBoolean(): Boolean {
+			return false
+		}
+
+		override fun isNumber(): Boolean {
+			return false
+		}
+
+		override fun isString(): Boolean {
+			return false
+		}
+
+		override fun isObject(): Boolean {
+			return false
+		}
+
+		override fun isArray(): Boolean {
+			return false
+		}
+
+		override fun getBoolean(): Boolean {
+			return false
+		}
+
+		override fun getNumber(): Double {
+			return Double.NaN
+		}
+
+		override fun getString(): String {
+			return ""
+		}
+
+		override fun getObject(): JsonObject.Read {
+			return JsonObject.Invalid(error)
+		}
+
+		override fun getArray(): JsonArray.Read {
+			return JsonArray.Invalid(error)
+		}
+
+		override fun validate(): String {
+			return error
+		}
+
+		override fun equals(other: Any?): Boolean {
+			return hashCode() == other.hashCode()
+		}
+
+		override fun hashCode(): Int {
+			return error.hashCode()
+		}
+
+		override fun toString(): String{
+			return error
+		}
+	}
+
 	class Valid(private val string: String): JsonValue {
 
 		override fun isNull(): Boolean {
@@ -80,56 +145,33 @@ sealed interface JsonValue {
 		override fun getArray(): JsonArray.Read {
 			return JsonArray.parse(string)
 		}
-	}
 
-	class Invalid(private val error: String): JsonValue {
-
-		override fun isNull(): Boolean {
-			return false
+		override fun validate(): String {
+			if (isObject()) {
+				return JsonObject.parse(string).validate()
+			}
+			else if (isArray()) {
+				return JsonArray.parse(string).validate()
+			}
+			else {
+				return ""
+			}
 		}
 
-		override fun isBoolean(): Boolean {
-			return false
+		override fun equals(other: Any?): Boolean {
+			return hashCode() == other.hashCode()
 		}
 
-		override fun isNumber(): Boolean {
-			return false
-		}
-
-		override fun isString(): Boolean {
-			return false
-		}
-
-		override fun isObject(): Boolean {
-			return false
-		}
-
-		override fun isArray(): Boolean {
-			return false
-		}
-
-		override fun getBoolean(): Boolean {
-			return false
-		}
-
-		override fun getNumber(): Double {
-			return Double.NaN
-		}
-
-		override fun getString(): String {
-			return ""
-		}
-
-		override fun getObject(): JsonObject.Read {
-			return JsonObject.Invalid(error)
-		}
-
-		override fun getArray(): JsonArray.Read {
-			return JsonArray.Invalid(error)
-		}
-
-		override fun toString(): String{
-			return error
+		override fun hashCode(): Int {
+			if (isObject()) {
+				return JsonObject.parse(string).hashCode()
+			}
+			else if (isArray()) {
+				return JsonArray.parse(string).hashCode()
+			}
+			else {
+				return string.hashCode()
+			}
 		}
 	}
 

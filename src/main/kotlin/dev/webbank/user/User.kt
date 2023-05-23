@@ -12,10 +12,9 @@ interface User {
 
 	companion object {
 
-		fun parse(): User {
+		fun parse(json: JsonObject.Read): User {
 			val uid = UUID.randomUUID()
-			return ValidUser(uid, "name")
-
+			return ValidUser(uid, json.getString("name"))
 		}
 	}
 }
@@ -27,7 +26,9 @@ class ValidUser(private val uid: UUID, private val name: String): User, Valid {
 	}
 
 	override fun toJson(): JsonObject.Write {
-		return JsonObject.Write().put("id", uid.toString())
+		return JsonObject()
+			.put("id", uid.toString())
+			.put("name", name)
 	}
 }
 

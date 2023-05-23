@@ -12,6 +12,7 @@ import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.application.call
 
+import dev.webbank.json.JsonObject
 import dev.webbank.persistence.Repository
 import dev.webbank.user.User
 
@@ -19,9 +20,9 @@ fun Application.api(repository: Repository) {
 	install(Webjars)
     routing {
 		post("/user") {
-			call.receiveText()
+			val json = JsonObject.parse(call.receiveText())
 
-			val user = User.parse()
+			val user = User.parse(json)
 			repository.saveUser(user)
 
 			call.respondText(user.toJson().toString())
