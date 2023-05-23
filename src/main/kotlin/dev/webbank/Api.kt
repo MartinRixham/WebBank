@@ -11,6 +11,7 @@ import io.ktor.http.ContentType
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.application.call
+import java.util.UUID
 
 import dev.webbank.json.JsonObject
 import dev.webbank.persistence.Repository
@@ -19,10 +20,16 @@ import dev.webbank.user.User
 fun Application.api(repository: Repository) {
 	install(Webjars)
     routing {
+		get("/user/{id}") {
+			val id = UUID.fromString(call.parameters["id"])
+			val user = repository.readUser(id)
+
+			call.respondText(user.toJson().toString())
+		}
 		post("/user") {
 			val json = JsonObject.parse(call.receiveText())
-
 			val user = User.parse(json)
+
 			repository.saveUser(user)
 
 			call.respondText(user.toJson().toString())
