@@ -12,7 +12,7 @@ import dev.webbank.persistence.Valid
 class UserTest {
 
 	@Test
-	fun `user has name`() {
+	fun `parse user from JSON`() {
 
 		val json = JsonObject().put("name", "a user name").read()
 		val user = User.parse(json)
