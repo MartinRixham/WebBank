@@ -1,0 +1,19 @@
+{
+  "name": "webbank",
+  "version": "1.0.0",
+  "description": "A demonstration of asynchronously processing financial transactions.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "echo starting"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/MartinRixham/WebBank.git"
+  },
+  "author": "Martin Rixham",
+  "license": "AGPL-3.0-or-later",
+  "dependencies": {
+    "Datum": "^0.13.2"
+  }
+}
