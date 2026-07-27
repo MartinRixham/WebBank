@@ -2,9 +2,8 @@ package com.webbank
 
 import io.ktor.server.application.Application
 import io.ktor.server.engine.embeddedServer
+import io.ktor.server.http.content.staticResources
 import io.ktor.server.netty.Netty
-import io.ktor.server.response.respondText
-import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
 
 fun main() {
@@ -14,9 +13,7 @@ fun main() {
 
 fun Application.module() {
     routing {
-        get("/") {
-
-            call.respondText("Hello, World!")
-        }
+        // The client module packages the static site under web/ on the classpath.
+        staticResources("/", "web")
     }
 }

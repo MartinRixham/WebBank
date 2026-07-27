@@ -19,6 +19,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.webbank</groupId>
+            <artifactId>client</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>
         </dependency>

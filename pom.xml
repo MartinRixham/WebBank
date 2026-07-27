@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>client</module>
         <module>server</module>
     </modules>
 
@@ -26,6 +27,11 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.webbank</groupId>
+                <artifactId>client</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-stdlib</artifactId>
