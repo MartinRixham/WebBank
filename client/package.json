@@ -1,0 +1,20 @@
+{
+  "name": "client",
+  "version": "1.0.0",
+  "description": "The WebBank client.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "test": "vitest run"
+  },
+  "license": "LGPL-3.0",
+  "dependencies": {
+    "@datumjs/datum": "^0.14.1"
+  },
+  "devDependencies": {
+    "vite": "^8.1.5",
+    "vitest": "^4.1.10"
+  }
+}

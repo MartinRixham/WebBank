@@ -21,6 +21,9 @@
         <ktor.version>3.3.0</ktor.version>
         <logback.version>1.5.18</logback.version>
         <shade.version>3.6.0</shade.version>
+        <frontend.version>1.15.1</frontend.version>
+        <node.version>v22.22.2</node.version>
+        <skipTests>false</skipTests>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
     </properties>
@@ -91,6 +94,14 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-shade-plugin</artifactId>
                     <version>${shade.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.github.eirslett</groupId>
+                    <artifactId>frontend-maven-plugin</artifactId>
+                    <version>${frontend.version}</version>
+                    <configuration>
+                        <nodeVersion>${node.version}</nodeVersion>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
