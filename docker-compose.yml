@@ -1,0 +1,13 @@
+services:
+  redis:
+    # Fully qualified so that Podman, which refuses to guess a registry for a
+    # short name, resolves it the same way Docker does.
+    image: docker.io/library/redis:8-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+
+volumes:
+  redis-data:

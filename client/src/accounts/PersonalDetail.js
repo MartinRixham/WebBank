@@ -22,6 +22,11 @@ export default class PersonalDetail {
         element.innerHTML = html.default;
     }
 
+    get name() {
+
+        return this.#detail.name;
+    }
+
     label = new Text(() => this.#detail.label);
 
     input = new Binding({

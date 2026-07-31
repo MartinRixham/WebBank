@@ -4,6 +4,18 @@ import details from "../../src/accounts/details.js";
 
 describe("personal details", () => {
 
+    it("names each detail with the field the server stores it under", () => {
+
+        expect(details.map(detail => detail.name)).toEqual([
+            "firstName",
+            "lastName",
+            "email",
+            "phone",
+            "dateOfBirth",
+            "ssn"
+        ]);
+    });
+
     it("lists the details an account needs in the order of the design", () => {
 
         expect(details.map(detail => detail.label)).toEqual([

@@ -2,9 +2,16 @@ import { describe, it, expect } from "vitest";
 
 import PersonalDetail from "../../src/accounts/PersonalDetail.js";
 
-const DETAIL = { label: "First Name", placeholder: "Eleanor" };
+const DETAIL = { name: "firstName", label: "First Name", placeholder: "Eleanor" };
 
 describe("personal detail", () => {
+
+    it("takes the name of the field it fills in", () => {
+
+        const viewModel = new PersonalDetail(DETAIL);
+
+        expect(viewModel.name).toBe("firstName");
+    });
 
     it("labels the input with the name of the detail", () => {
 

@@ -19,8 +19,11 @@
         <kotlin.version>2.2.20</kotlin.version>
         <kotlinx.coroutines.version>1.10.2</kotlinx.coroutines.version>
         <ktor.version>3.3.0</ktor.version>
+        <jedis.version>7.5.3</jedis.version>
         <logback.version>1.5.18</logback.version>
+        <junit.version>5.14.4</junit.version>
         <shade.version>3.6.0</shade.version>
+        <surefire.version>3.5.6</surefire.version>
         <frontend.version>1.15.1</frontend.version>
         <node.version>v22.22.2</node.version>
         <skipTests>false</skipTests>
@@ -56,9 +59,54 @@
                 <version>${ktor.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.jetbrains.kotlinx</groupId>
+                <artifactId>kotlinx-coroutines-test</artifactId>
+                <version>${kotlinx.coroutines.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.ktor</groupId>
+                <artifactId>ktor-server-content-negotiation-jvm</artifactId>
+                <version>${ktor.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.ktor</groupId>
+                <artifactId>ktor-serialization-kotlinx-json-jvm</artifactId>
+                <version>${ktor.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.ktor</groupId>
+                <artifactId>ktor-server-status-pages-jvm</artifactId>
+                <version>${ktor.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.ktor</groupId>
+                <artifactId>ktor-server-test-host-jvm</artifactId>
+                <version>${ktor.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>redis.clients</groupId>
+                <artifactId>jedis</artifactId>
+                <version>${jedis.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
                 <version>${logback.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-test-junit5</artifactId>
+                <version>${kotlin.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${junit.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -94,6 +142,11 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-shade-plugin</artifactId>
                     <version>${shade.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${surefire.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>com.github.eirslett</groupId>
