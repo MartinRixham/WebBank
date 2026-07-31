@@ -1,4 +1,6 @@
 import { BindingRoot } from "@datumjs/datum";
-import HelloWorld from "./hello/HelloWorld.js";
 
-new BindingRoot(new HelloWorld());
+import "./theme/theme.css";
+import App from "./App.js";
+
+new BindingRoot(new App());

@@ -1,0 +1,12 @@
+/* An icon is drawn by masking the element with its svg file rather than by
+   inlining the file, so that the stylesheet keeps the reference to the file and
+   the icon still takes the colour of the component around it. Each component
+   names its own file with mask-image and sizes the element itself. */
+.icon {
+    display: block;
+    flex-shrink: 0;
+    background-color: currentColor;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+}

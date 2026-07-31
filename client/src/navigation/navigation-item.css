@@ -1,0 +1,60 @@
+.navigation-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.375rem 0.875rem;
+    border: none;
+    border-radius: var(--radius);
+    background: none;
+    font-family: inherit;
+    font-size: 0.875rem;
+    line-height: calc(1.25 / 0.875);
+    font-weight: 500;
+    color: var(--muted-foreground);
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.navigation-item:hover {
+    color: var(--foreground);
+    background-color: var(--secondary);
+}
+
+/* The selected item keeps its accent on hover; the design only ever applies the
+   hover treatment to the items that are not selected. */
+.navigation-item--selected,
+.navigation-item--selected:hover {
+    color: var(--primary);
+    background-color: color-mix(in oklab, var(--primary) 10%, transparent);
+}
+
+/* The modifier is added by the view model from the icon named by the section, so
+   that the file each domain area draws is named here rather than in JavaScript. */
+.navigation-item__icon {
+    width: 13px;
+    height: 13px;
+}
+
+.navigation-item__icon--user {
+    mask-image: url("../icons/user.svg");
+}
+
+.navigation-item__icon--layout-dashboard {
+    mask-image: url("../icons/layout-dashboard.svg");
+}
+
+.navigation-item__icon--list {
+    mask-image: url("../icons/list.svg");
+}
+
+.navigation-item__icon--arrow-left-right {
+    mask-image: url("../icons/arrow-left-right.svg");
+}
+
+.navigation-item__icon--file-text {
+    mask-image: url("../icons/file-text.svg");
+}
+
+.navigation-item__icon--shield {
+    mask-image: url("../icons/shield.svg");
+}

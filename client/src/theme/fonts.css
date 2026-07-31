@@ -1,0 +1,19 @@
+/* Both faces are lifted from the design export in design/homepage.html so that
+   the fonts are served from the application rather than a third party. Inter is
+   a variable font, so one file covers every weight. */
+
+@font-face {
+    font-family: "Inter";
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url("./fonts/inter.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: "DM Serif Display";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("./fonts/dm-serif-display-400.woff2") format("woff2");
+}
