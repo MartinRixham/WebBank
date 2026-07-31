@@ -3,3 +3,14 @@
     flex-direction: column;
     min-height: 100vh;
 }
+
+.app__main {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 3rem;
+    width: 100%;
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 2rem;
+}

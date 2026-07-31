@@ -1,13 +1,14 @@
 @import "./fonts.css";
 @import "../icons/icons.css";
 
-/* The subset of the design's tokens that the top navigation uses. Further
-   tokens should be copied across from design/homepage.html as they are needed. */
+/* The subset of the design's tokens that the page uses so far. Further tokens
+   should be copied across from design/homepage.html as they are needed. */
 :root {
     --font-size: 16px;
 
     --background: #080f20;
     --foreground: #f0ebe0;
+    --card: #0f1a30;
     --primary: #c9a84c;
     --primary-foreground: #080f20;
     --secondary: #1a2540;

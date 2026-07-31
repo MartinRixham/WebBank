@@ -1,3 +1,4 @@
+import AccountCreation from "./accounts/AccountCreation.js";
 import TopNavigation from "./navigation/TopNavigation.js";
 
 import "./app.css";
@@ -5,6 +6,8 @@ import "./app.css";
 export default class App {
 
     topNavigation = new TopNavigation();
+
+    accountCreation = new AccountCreation();
 
     async onBind(element) {
 
