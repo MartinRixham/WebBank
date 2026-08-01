@@ -21,6 +21,8 @@
 
     --font-sans: Inter, sans-serif;
     --font-serif: "DM Serif Display", serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "Liberation Mono", "Courier New", monospace;
 }
 
 *,

@@ -1,5 +1,10 @@
 import Account from "./Account.js";
 
-// A placeholder for the account the customer is looking at, until accounts are
-// fetched from the server. It is the account shown in the design.
-export const selectedAccount = new Account("Checking", "4821");
+// Placeholders for the accounts the customer can switch between, until they are
+// fetched from the server. They are the accounts shown in the design.
+export default [
+
+    new Account("Checking", "4821", 51340.28),
+    new Account("Savings", "7203", 24810),
+    new Account("Investment", "9901", 138200)
+];

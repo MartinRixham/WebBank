@@ -2,13 +2,21 @@ const MASK = "••";
 
 const VISIBLE_DIGITS = 4;
 
+const CURRENCY = new Intl.NumberFormat("en-US", {
+
+    style: "currency",
+    currency: "USD"
+});
+
 export default class Account {
 
     #name;
 
     #number;
 
-    constructor(name, number) {
+    #balance;
+
+    constructor(name, number, balance = 0) {
 
         if (!name) {
 
@@ -22,6 +30,7 @@ export default class Account {
 
         this.#name = name;
         this.#number = number;
+        this.#balance = balance;
     }
 
     get name() {
@@ -38,5 +47,15 @@ export default class Account {
     get label() {
 
         return this.#name + " " + this.maskedNumber;
+    }
+
+    get balance() {
+
+        return this.#balance;
+    }
+
+    get formattedBalance() {
+
+        return CURRENCY.format(this.#balance);
     }
 }

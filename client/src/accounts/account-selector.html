@@ -1,5 +1,10 @@
-<span class="account-selector__avatar">
-    <span class="icon account-selector__avatar-icon"></span>
-</span>
-<span class="account-selector__label" data-bind="label"></span>
-<span class="icon account-selector__chevron"></span>
+<button class="account-selector__button" type="button" data-bind="button">
+    <span class="account-selector__avatar">
+        <span class="icon account-selector__avatar-icon"></span>
+    </span>
+    <span class="account-selector__label" data-bind="label"></span>
+    <span class="icon account-selector__chevron" data-bind="chevron"></span>
+</button>
+<div class="account-selector__dropdown" data-bind="dropdown">
+    <div class="account-menu" data-bind="menu"></div>
+</div>

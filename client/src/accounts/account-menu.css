@@ -1,0 +1,18 @@
+.account-menu {
+    width: 16rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background-color: var(--card);
+    box-shadow: 0 25px 50px -12px color-mix(in oklab, #000 50%, transparent);
+    overflow: hidden;
+}
+
+.account-menu__heading {
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.625rem;
+    line-height: 1.6;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted-foreground);
+}

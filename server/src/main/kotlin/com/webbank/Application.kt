@@ -19,13 +19,13 @@ import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
-import redis.clients.jedis.JedisPooled
+import redis.clients.jedis.RedisClient
 import java.net.URI
 
 fun main() {
     // Docker compose runs Redis on its default port; the variable is there for
     // a deployment that puts it somewhere else.
-    val redis = JedisPooled(URI(System.getenv("REDIS_URL") ?: "redis://localhost:6379"))
+    val redis = RedisClient.create(URI(System.getenv("REDIS_URL") ?: "redis://localhost:6379"))
 
     embeddedServer(Netty, port = 8080, host = "0.0.0.0") {
         module(RedisAccounts(JedisHashes(redis)))

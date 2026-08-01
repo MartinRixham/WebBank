@@ -1,0 +1,67 @@
+.account-menu-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.625rem 0.75rem;
+    border: none;
+    background: none;
+    font-family: inherit;
+    font-size: 0.875rem;
+    line-height: calc(1.25 / 0.875);
+    color: var(--foreground);
+    cursor: pointer;
+    transition: background-color var(--transition);
+}
+
+.account-menu-item--selected {
+    background-color: color-mix(in oklab, var(--primary) 5%, transparent);
+}
+
+/* The hover treatment beats the selected account's tint, as it does in the
+   design, so the row under the pointer always stands out. */
+.account-menu-item:hover {
+    background-color: var(--secondary);
+}
+
+.account-menu-item__account {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.125rem;
+}
+
+.account-menu-item__label {
+    font-weight: 500;
+}
+
+.account-menu-item--selected .account-menu-item__label {
+    color: var(--primary);
+}
+
+.account-menu-item__type {
+    font-size: 0.75rem;
+    line-height: calc(1 / 0.75);
+    color: var(--muted-foreground);
+}
+
+.account-menu-item__summary {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.125rem;
+}
+
+.account-menu-item__balance {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: calc(1 / 0.75);
+}
+
+.account-menu-item__check {
+    width: 11px;
+    height: 11px;
+    color: var(--primary);
+    mask-image: url("../icons/check.svg");
+}
