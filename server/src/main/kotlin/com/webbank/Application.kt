@@ -5,9 +5,7 @@ import com.webbank.account.AccountCreated
 import com.webbank.account.AccountList
 import com.webbank.account.Accounts
 import com.webbank.account.HttpAccounts
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.cio.CIO
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation as ClientContentNegotiation
+import com.webbank.account.databaseClient
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
@@ -25,17 +23,10 @@ import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
 
 fun main() {
-    val client =
-        HttpClient(CIO) {
-            install(ClientContentNegotiation) {
-                json()
-            }
-            expectSuccess = true
-        }
     val database = System.getenv("DATABASE_URL") ?: "http://localhost:8081"
 
     embeddedServer(Netty, port = 8080, host = "0.0.0.0") {
-        module(HttpAccounts(client, database))
+        module(HttpAccounts(databaseClient(), database))
     }.start(wait = true)
 }
 

@@ -56,7 +56,7 @@
         </dependency>
         <dependency>
             <groupId>io.ktor</groupId>
-            <artifactId>ktor-client-cio-jvm</artifactId>
+            <artifactId>ktor-client-java-jvm</artifactId>
         </dependency>
         <dependency>
             <groupId>io.ktor</groupId>
