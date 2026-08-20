@@ -1,0 +1,16 @@
+{
+  "name": "dev",
+  "version": "1.0.0",
+  "description": "The WebBank business requirements wiki.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview"
+  },
+  "license": "LGPL-3.0",
+  "devDependencies": {
+    "vitepress": "^1.6.4"
+  }
+}
