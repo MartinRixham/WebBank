@@ -1,4 +1,4 @@
-package com.webbank.account
+package com.webbank.database.account
 
 import kotlin.test.Test
 import kotlin.test.assertEquals

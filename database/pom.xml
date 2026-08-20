@@ -10,18 +10,14 @@
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>server</artifactId>
+    <artifactId>database</artifactId>
     <packaging>jar</packaging>
 
     <properties>
-        <main.class>com.webbank.ApplicationKt</main.class>
+        <main.class>com.webbank.database.ApplicationKt</main.class>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>com.webbank</groupId>
-            <artifactId>client</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>
@@ -51,16 +47,8 @@
             <artifactId>ktor-server-status-pages-jvm</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.ktor</groupId>
-            <artifactId>ktor-client-core-jvm</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.ktor</groupId>
-            <artifactId>ktor-client-cio-jvm</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.ktor</groupId>
-            <artifactId>ktor-client-content-negotiation-jvm</artifactId>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -121,7 +109,7 @@
                             <!-- The executable jar belongs to the build as a whole, so it is
                                  written to the top level target directory. -->
                             <outputDirectory>${project.parent.basedir}/target</outputDirectory>
-                            <finalName>${project.parent.artifactId}-${project.version}</finalName>
+                            <finalName>${project.parent.artifactId}-${project.artifactId}-${project.version}</finalName>
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">

@@ -1,19 +1,14 @@
-package com.webbank
+package com.webbank.database
 
-import com.webbank.account.Account
-import com.webbank.account.AccountCreated
-import com.webbank.account.AccountList
-import com.webbank.account.Accounts
-import com.webbank.account.HttpAccounts
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.cio.CIO
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation as ClientContentNegotiation
+import com.webbank.database.account.Account
+import com.webbank.database.account.AccountCreated
+import com.webbank.database.account.Accounts
+import com.webbank.database.account.RedisAccounts
 import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.engine.embeddedServer
-import io.ktor.server.http.content.staticResources
 import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.BadRequestException
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
@@ -23,19 +18,15 @@ import io.ktor.server.response.respond
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
+import redis.clients.jedis.RedisClient
+import java.net.URI
 
 fun main() {
-    val client =
-        HttpClient(CIO) {
-            install(ClientContentNegotiation) {
-                json()
-            }
-            expectSuccess = true
-        }
-    val database = System.getenv("DATABASE_URL") ?: "http://localhost:8081"
+    val redis: RedisClient = RedisClient.create(URI(System.getenv("REDIS_URL") ?: "redis://localhost:6379"))
+    val port = System.getenv("DATABASE_PORT")?.toInt() ?: 8081
 
-    embeddedServer(Netty, port = 8080, host = "0.0.0.0") {
-        module(HttpAccounts(client, database))
+    embeddedServer(Netty, port = port, host = "0.0.0.0") {
+        module(RedisAccounts(redis))
     }.start(wait = true)
 }
 
@@ -60,7 +51,5 @@ fun Application.module(accounts: Accounts) {
         get("/accounts") {
             call.respond(HttpStatusCode.OK, accounts.list())
         }
-
-        staticResources("/", "web")
     }
 }

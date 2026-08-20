@@ -11,6 +11,7 @@
 
     <modules>
         <module>client</module>
+        <module>database</module>
         <module>server</module>
     </modules>
 
@@ -77,6 +78,21 @@
             <dependency>
                 <groupId>io.ktor</groupId>
                 <artifactId>ktor-server-status-pages-jvm</artifactId>
+                <version>${ktor.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.ktor</groupId>
+                <artifactId>ktor-client-core-jvm</artifactId>
+                <version>${ktor.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.ktor</groupId>
+                <artifactId>ktor-client-cio-jvm</artifactId>
+                <version>${ktor.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.ktor</groupId>
+                <artifactId>ktor-client-content-negotiation-jvm</artifactId>
                 <version>${ktor.version}</version>
             </dependency>
             <dependency>

@@ -4,19 +4,25 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-WebBank is an online banking demonstration: a Vite-built vanilla JS front end (Datum.js data binding) packaged into a Ktor/Netty Kotlin server as a single executable jar.
+WebBank is an online banking demonstration: a Vite-built vanilla JS front end (Datum.js data binding) packaged into a Ktor/Netty Kotlin server, which keeps its accounts in a second Ktor/Netty service that owns the Redis store. Each service builds to an executable jar of its own.
 
 ## Build and run
 
-Everything is driven from the Maven reactor at the repo root (`webbank` → modules `client`, `server`). The `client` module owns the npm build via `frontend-maven-plugin`, which downloads its own Node into `client/node/` — a system Node install is not required for the Maven build.
+Everything is driven from the Maven reactor at the repo root (`webbank` → modules `client`, `database`, `server`). The `client` module owns the npm build via `frontend-maven-plugin`, which downloads its own Node into `client/node/` — a system Node install is not required for the Maven build.
 
 ```bash
-mvn package                     # full build: npm install, vite build, vitest, kotlin compile, shaded jar
+mvn package                     # full build: npm install, vite build, vitest, kotlin compile, shaded jars
 mvn package -DskipTests         # skips the vitest execution in the client module
-java -jar target/webbank-1.0.0.jar   # serves the app on http://localhost:8080
+docker compose up -d                          # redis on 6379
+java -jar target/webbank-database-1.0.0.jar   # account store on http://localhost:8081
+java -jar target/webbank-1.0.0.jar            # serves the app on http://localhost:8080
 ```
 
-Note that the shade plugin writes the executable jar to the **top-level** `target/`, not `server/target/`.
+The server needs the database service to answer anything under `/account`; start the database first.
+
+Note that the shade plugin writes both executable jars to the **top-level** `target/`, not to the module's own `target/`.
+
+Environment overrides: `REDIS_URL` and `DATABASE_PORT` for the database service, `DATABASE_URL` for the server.
 
 ### Front-end iteration
 
@@ -34,6 +40,10 @@ npx vitest run -t "labels the button"          # a single test by name
 ## Architecture
 
 **Client → classpath → server.** `client/vite.config.js` builds into `client/target/dist`, and `client/pom.xml` declares that directory as a Maven resource packaged under `web/` in `client-1.0.0.jar`. The server depends on that jar and serves it with `staticResources("/", "web")` in `server/src/main/kotlin/com/webbank/Application.kt`. There is no proxy or CORS setup — client and server are the same origin in production. The app is a single page: `client/index.html` loads `src/main.js`, which does `new BindingRoot(new App())` once; navigation swaps content within that page rather than loading new documents.
+
+**Server → HTTP → database.** Redis is reached only by the `database` module, which puts a small JSON API in front of it (`POST /account`, `GET /accounts`) in `database/src/main/kotlin/com/webbank/database/Application.kt`. The server holds no Redis dependency: its `Accounts` implementation is `HttpAccounts`, a suspending Ktor client on the CIO engine, so a request waiting on the store never occupies a thread. Jedis is blocking, so the database module keeps its commands on `Dispatchers.IO`.
+
+The two sides agree on a JSON shape, not a class. `Account`, `AccountList` and `AccountCreated` are declared once in each module rather than shared through a common jar, which is what keeps the server's classpath free of Jedis; `Account.fields()`, the Redis hash mapping, exists only on the database's copy. Change one side of the contract and the other's tests are what should catch it.
 
 ### Datum.js view models
 
@@ -66,7 +76,7 @@ Testing is not optional here: **every change ships with tests**, and the suite m
 - **Cover behaviour, not just the happy path.** For each unit, test the expected result, the boundaries (empty, zero, missing, maximum), and the error/invalid cases. One assertion per behaviour, with a test name that states the behaviour (`it("rejects a transfer larger than the balance")`).
 - **Client tests are vitest, DOM-free.** Test files mirror the source path under `client/test/` and are named `<Class>.test.js`. Construct the view model and invoke the binding as a function: `viewModel.label().text()`, `viewModel.button().classes["navigation-item--selected"]()`, `viewModel.button().click()`. See `client/test/navigation/NavigationItem.test.js`. If a view model is hard to test this way, the DOM concern belongs in the template or `onBind`, not in the view model.
 - **Keep collaborators injectable.** View models take their data as a constructor parameter defaulting to the real thing (`new NavigationMenu(sections = navigationSections)`, `new AccountSelector(account = selectedAccount)`), so tests can pass a fixture or an empty list.
-- **Server tests** go under `server/src/test/kotlin` (Surefire picks them up). None exist yet, so the first one also adds a test dependency to `server/pom.xml`. Use Ktor's `testApplication` for route-level tests rather than starting a real Netty server.
+- **Server and database tests** go under `server/src/test/kotlin` and `database/src/test/kotlin` (Surefire picks them up). Use Ktor's `testApplication` for route-level tests rather than starting a real Netty server. `HttpAccountsTest` uses it from the other end too: the database is stood up as a test application and the client under test talks to it, so the contract is exercised over a real round trip.
 - **Run the tests before reporting completion**: `npx vitest run` from `client/` while iterating, and `mvn package` at the root for the full reactor. Report failures with their output rather than working around them.
 - **Never weaken a test to make it pass** — no deleting assertions, loosening expectations, or skipping/commenting out tests to get a green run. If a test is genuinely wrong, fix it deliberately and say so.
 
