@@ -5,14 +5,15 @@ import { defineConfig } from "vitepress";
 export default defineConfig({
 
     title: "WebBank",
-    description: "The business requirements of the WebBank online banking demonstration.",
+    description: "Documentation for the WebBank online banking demonstration.",
     lang: "en-GB",
     cleanUrls: true,
 
     themeConfig: {
 
         nav: [
-            { text: "Home", link: "/" }
+            { text: "Home", link: "/" },
+            { text: "Database API", link: "/database/" }
         ],
 
         sidebar: [
@@ -20,6 +21,17 @@ export default defineConfig({
                 text: "The application",
                 items: [
                     { text: "Overview", link: "/" }
+                ]
+            },
+            {
+                text: "Database API",
+                items: [
+                    { text: "Overview", link: "/database/" },
+                    { text: "Tables", link: "/database/tables" },
+                    { text: "Records", link: "/database/records" },
+                    { text: "Scans", link: "/database/scans" },
+                    { text: "Batches", link: "/database/batches" },
+                    { text: "Reference", link: "/database/reference" }
                 ]
             }
         ],
