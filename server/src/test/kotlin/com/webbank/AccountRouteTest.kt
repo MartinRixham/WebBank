@@ -1,7 +1,9 @@
 package com.webbank
 
 import com.webbank.account.Account
+import com.webbank.account.AccountList
 import com.webbank.account.Accounts
+import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
@@ -12,18 +14,7 @@ import io.ktor.server.testing.testApplication
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-private const val ACCOUNT_JSON = """
-    {
-        "firstName": "Eleanor",
-        "lastName": "Whitmore",
-        "email": "e.whitmore@email.com",
-        "phone": "+1 (555) 000-0000",
-        "dateOfBirth": "01 / 01 / 1990",
-        "ssn": "6789"
-    }
-"""
-
-private class FakeAccounts : Accounts {
+class FakeAccounts : Accounts {
 
     val saved = mutableListOf<Account>()
 
@@ -31,6 +22,11 @@ private class FakeAccounts : Accounts {
         saved.add(account)
 
         return "1234"
+    }
+
+    override suspend fun list(): AccountList {
+
+        return AccountList()
     }
 }
 
@@ -42,10 +38,22 @@ class AccountRouteTest {
 
         application { module(accounts) }
 
-        client.post("/account") {
-            contentType(ContentType.Application.Json)
-            setBody(ACCOUNT_JSON)
-        }
+        val response =
+            client.post("/account") {
+                contentType(ContentType.Application.Json)
+                setBody(
+                    """
+                    {
+                        "firstName": "Eleanor",
+                        "lastName": "Whitmore",
+                        "email": "e.whitmore@email.com",
+                        "phone": "+1 (555) 000-0000",
+                        "dateOfBirth": "01 / 01 / 1990",
+                        "ssn": "6789"
+                    }
+                    """.trimIndent()
+                )
+            }
 
         assertEquals(
             listOf(
@@ -60,31 +68,8 @@ class AccountRouteTest {
             ),
             accounts.saved
         )
-    }
-
-    @Test
-    fun `answers that the account was created`() = testApplication {
-        application { module(FakeAccounts()) }
-
-        val response =
-            client.post("/account") {
-                contentType(ContentType.Application.Json)
-                setBody(ACCOUNT_JSON)
-            }
 
         assertEquals(HttpStatusCode.Created, response.status)
-    }
-
-    @Test
-    fun `answers with the id the account was saved under`() = testApplication {
-        application { module(FakeAccounts()) }
-
-        val response =
-            client.post("/account") {
-                contentType(ContentType.Application.Json)
-                setBody(ACCOUNT_JSON)
-            }
-
         assertEquals("""{"id":"1234"}""", response.bodyAsText())
     }
 
@@ -118,5 +103,45 @@ class AccountRouteTest {
 
         assertEquals(HttpStatusCode.BadRequest, response.status)
         assertEquals(emptyList(), accounts.saved)
+    }
+
+    @Test
+    fun `gets no accounts when non saved`() = testApplication {
+        val accounts = FakeAccounts()
+
+        application { module(accounts) }
+
+        val response = client.get("/accounts")
+
+        assertEquals(HttpStatusCode.OK, response.status)
+        assertEquals("""{"accounts":[]}""", response.bodyAsText())
+    }
+
+    @Test
+    fun `gets one saved account`() = testApplication {
+        val accounts = FakeAccounts()
+
+        application { module(accounts) }
+
+        client.post("/account") {
+            contentType(ContentType.Application.Json)
+            setBody(
+                """
+                {
+                    "firstName": "Eleanor",
+                    "lastName": "Whitmore",
+                     "email": "e.whitmore@email.com",
+                     "phone": "+1 (555) 000-0000",
+                     "dateOfBirth": "01 / 01 / 1990",
+                     "ssn": "6789"
+                 }
+                """.trimIndent()
+            )
+        }
+
+        val response = client.get("/accounts")
+
+        assertEquals(HttpStatusCode.OK, response.status)
+        assertEquals("""{"accounts":[]}""", response.bodyAsText())
     }
 }
