@@ -25,8 +25,7 @@ class RedisAccountsTest {
             email = "e.whitmore@email.com",
             phone = "+1 (555) 000-0000",
             dateOfBirth = "01 / 01 / 1990",
-            ssn = "6789"
-        )
+            ssn = "6789")
 
     @Test
     fun `saves an account as a hash keyed by its id`() = runTest {

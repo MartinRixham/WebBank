@@ -10,8 +10,7 @@ import io.ktor.http.contentType
 
 class HttpAccounts(
     private val client: HttpClient,
-    private val url: String = "http://localhost:8081"
-) : Accounts {
+    private val url: String = "http://localhost:8081") : Accounts {
 
     override suspend fun save(account: Account): String =
         client.post("$url/account") {

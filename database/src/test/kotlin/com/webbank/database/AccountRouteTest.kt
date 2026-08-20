@@ -51,8 +51,7 @@ class AccountRouteTest {
                         "dateOfBirth": "01 / 01 / 1990",
                         "ssn": "6789"
                     }
-                    """.trimIndent()
-                )
+                    """.trimIndent())
             }
 
         assertEquals(
@@ -63,11 +62,8 @@ class AccountRouteTest {
                     "e.whitmore@email.com",
                     "+1 (555) 000-0000",
                     "01 / 01 / 1990",
-                    "6789"
-                )
-            ),
-            accounts.saved
-        )
+                    "6789")),
+            accounts.saved)
 
         assertEquals(HttpStatusCode.Created, response.status)
         assertEquals("""{"id":"1234"}""", response.bodyAsText())
@@ -135,8 +131,7 @@ class AccountRouteTest {
                      "dateOfBirth": "01 / 01 / 1990",
                      "ssn": "6789"
                  }
-                """.trimIndent()
-            )
+                """.trimIndent())
         }
 
         val response = client.get("/accounts")

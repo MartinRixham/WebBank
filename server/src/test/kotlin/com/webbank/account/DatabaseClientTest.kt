@@ -59,8 +59,7 @@ class CountingDatabase {
                         "Content-Length: ${body.length}\r\n" +
                         "\r\n" +
                         body
-                    ).toByteArray()
-            )
+                    ).toByteArray())
             connection.getOutputStream().flush()
         }
     }
@@ -111,8 +110,7 @@ class DatabaseClientTest {
             email = "e.whitmore@email.com",
             phone = "+1 (555) 000-0000",
             dateOfBirth = "01 / 01 / 1990",
-            ssn = "6789"
-        )
+            ssn = "6789")
 
     @AfterTest
     fun close() {

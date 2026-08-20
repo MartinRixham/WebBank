@@ -55,8 +55,7 @@ class HttpAccountsTest {
             email = "e.whitmore@email.com",
             phone = "+1 (555) 000-0000",
             dateOfBirth = "01 / 01 / 1990",
-            ssn = "6789"
-        )
+            ssn = "6789")
 
     private fun ApplicationTestBuilder.accounts(database: FakeDatabase): HttpAccounts {
         database.install(this)

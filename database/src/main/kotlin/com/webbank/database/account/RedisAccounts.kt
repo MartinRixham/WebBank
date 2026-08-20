@@ -8,8 +8,7 @@ import redis.clients.jedis.UnifiedJedis
 
 class RedisAccounts(
     private val redis: UnifiedJedis,
-    private val ids: () -> String = { UUID.randomUUID().toString() }
-) : Accounts {
+    private val ids: () -> String = { UUID.randomUUID().toString() }) : Accounts {
 
     override suspend fun save(account: Account): String {
         val id = ids()

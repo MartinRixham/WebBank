@@ -1,0 +1,12 @@
+root = true
+
+# Read by the IntelliJ-based Kotlin language server (kotlin-lsp), which is what
+# formats these files on save; the `ij_` keys are its code style settings.
+[*.kt]
+indent_style = space
+indent_size = 4
+
+# Kotlin's official style drops ')' onto a line of its own once a parameter or
+# argument list is wrapped. Keep it on the last item instead.
+ij_kotlin_method_parameters_right_paren_on_new_line = false
+ij_kotlin_call_parameters_right_paren_on_new_line = false

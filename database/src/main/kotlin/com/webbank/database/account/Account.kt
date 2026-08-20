@@ -9,8 +9,7 @@ data class Account(
     val email: String,
     val phone: String,
     val dateOfBirth: String,
-    val ssn: String
-) {
+    val ssn: String) {
     fun fields(): Map<String, String> =
         mapOf(
             "firstName" to firstName,
@@ -18,6 +17,5 @@ data class Account(
             "email" to email,
             "phone" to phone,
             "dateOfBirth" to dateOfBirth,
-            "ssn" to ssn
-        )
+            "ssn" to ssn)
 }

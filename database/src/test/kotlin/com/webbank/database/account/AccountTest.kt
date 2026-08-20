@@ -14,8 +14,7 @@ class AccountTest {
                 email = "e.whitmore@email.com",
                 phone = "+1 (555) 000-0000",
                 dateOfBirth = "01 / 01 / 1990",
-                ssn = "6789"
-            )
+                ssn = "6789")
 
         assertEquals(
             mapOf(
@@ -24,10 +23,8 @@ class AccountTest {
                 "email" to "e.whitmore@email.com",
                 "phone" to "+1 (555) 000-0000",
                 "dateOfBirth" to "01 / 01 / 1990",
-                "ssn" to "6789"
-            ),
-            account.fields()
-        )
+                "ssn" to "6789"),
+            account.fields())
     }
 
     @Test
